@@ -107,6 +107,8 @@ Other recommended projects:<br>
     # facexlib and gfpgan are for face enhancement
     pip install facexlib
     pip install gfpgan
+    pip install "fastapi[standard]"
+    pip install "uvicorn[standard]"
     pip install -r requirements.txt
     python setup.py develop
     ```
@@ -229,6 +231,17 @@ python inference_realesrgan.py -n RealESRGAN_x4plus_anime_6B -i inputs
 Results are in the `results` folder
 
 ---
+
+### Inference as a web server
+```bash
+uvicorn main:app --reload
+```
+Then run 
+
+```python
+python3 sample_request.py
+```
+
 
 ## BibTeX
 
