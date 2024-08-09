@@ -140,3 +140,5 @@ dmypy.json
 .pyre/
 
 output.png
+*out.png
+additional_input/

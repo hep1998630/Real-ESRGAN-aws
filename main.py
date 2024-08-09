@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 class data(BaseModel):
 	img_str: str
+	tile: int = 0
 	half: bool = False
 	output_dir: str = "results"
 
@@ -20,7 +21,7 @@ def read_root():
 
 @app.post("/inference")
 def inference(item: data):
-	result = main(item.img_str)
+	result = main(item.img_str, tile=item.tile)
 	
 	return result
 

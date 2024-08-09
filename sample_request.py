@@ -3,8 +3,13 @@ import requests
 import base64
 import cv2 
 from PIL import Image
-import numpy as np
 from io import BytesIO
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--input', type=str, default='additional_input/Hanekawa_wild.png', help='Input image or folder')
+parser.add_argument('--tile', type=int, default=0, help='Input image or folder')
+
 
 def input_fn(img_str):
     """
@@ -26,15 +31,18 @@ def prepare_image(frame, encode_quality = 50):
     dashboard_img = base64.b64encode(buffer).decode()
     return dashboard_img
 
+args = parser.parse_args()
 
 
+img_name= args.input
 
-image = cv2.imread("/media/mohamed/4tb/work/aws_nd/capstone/dev2k_dataset/DIV2K_valid_LR_x8/0801x8.png")
+image = cv2.imread(img_name)
 
 img_str = prepare_image(image)
 
 post_dict= {
   "img_str": img_str, 
+  "tile": args.tile,
   "half": False,
   "output_dir" :  "results"
 }
@@ -45,4 +53,4 @@ result = requests.post("http://127.0.0.1:8000/inference", json=post_dict)
 
 output_image = input_fn(result.json())
 
-output_image.save("output.png")
+output_image.save(img_name.split(".")[0]+"_out.png")
