@@ -142,3 +142,4 @@ dmypy.json
 output.png
 *out.png
 additional_input/
+flagged/

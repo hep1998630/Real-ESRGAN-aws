@@ -26,31 +26,34 @@ def input_fn(img_str):
 
 
 
-def prepare_image(frame, encode_quality = 50): 
-    _,buffer = cv2.imencode('.png', frame, [cv2.IMWRITE_JPEG_QUALITY, encode_quality])
-    dashboard_img = base64.b64encode(buffer).decode()
-    return dashboard_img
-
-args = parser.parse_args()
-
-
-img_name= args.input
-
-image = cv2.imread(img_name)
-
-img_str = prepare_image(image)
-
-post_dict= {
-  "img_str": img_str, 
-  "tile": args.tile,
-  "half": False,
-  "output_dir" :  "results"
-}
+def prepare_image(frame, encode_quality = 100): 
+  frame = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
+  _,buffer = cv2.imencode('.png', frame, [cv2.IMWRITE_JPEG_QUALITY, encode_quality])
+  dashboard_img = base64.b64encode(buffer).decode()
+  return dashboard_img
 
 
-result = requests.post("http://127.0.0.1:8000/inference", json=post_dict)
+
+def envoke_endpoint(image ,tile=512, half = False, output_dir="results"): 
+      
+
+  # image = cv2.imread(img_name)
+
+  img_str = prepare_image(image)
+
+  post_dict= {
+    "img_str": img_str, 
+    "tile": tile,
+    "half": half,
+    "output_dir" :  output_dir
+  }
 
 
-output_image = input_fn(result.json())
+  result = requests.post("http://127.0.0.1:8000/inference", json=post_dict)
 
-output_image.save(img_name.split(".")[0]+"_out.png")
+
+  output_image = input_fn(result.json())
+
+  # output_image.save(img_name.split(".")[0]+"_out.png")
+
+  return output_image
