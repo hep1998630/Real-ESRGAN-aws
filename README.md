@@ -243,6 +243,36 @@ python3 sample_request.py
 ```
 
 
+### For docker deployment in aws
+To connect to ec2 instance use: 
+
+```bash
+ssh -i real-esrgan.pem ubuntu@ipv4-public-dns.amazonaws.com
+```
+
+
+First, pull the container from Docker hub 
+```bash
+docker pull mohamad1998/real-esrgan-aws
+```
+Then run the container in detach mode, using the default entrypoint. This will allow us to use the terminal even after running the container
+
+```bash
+docker run -d --network host -it --gpus all mohamad1998/real-esrgan-aws
+```
+Now, it is time to run the gradio demo app, for this, we will run the same container but we will override the default entrypoint which will allow us to use the container's terminal. Note that we mounted the current directory (project root) to sync changed files if any. 
+
+```bash
+docker run -it --network host --entrypoint /bin/bash -v ./:/app mohamad1998/real-esrgan-aws 
+```
+
+Finally, we run the gradio demo app by using the command below, You can control sharing the demo publicly by setting the share parameter to True (default is False)
+
+```python
+python3 gradio_demo.py --share True
+```
+
+
 ## BibTeX
 
     @InProceedings{wang2021realesrgan,
