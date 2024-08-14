@@ -2,13 +2,13 @@
 
 ## Definition 
 ### Project Overview
-This blog post is a walkthrough in deploying [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) in Amazon Web Services (AWS). Real-ESRGAN is a state-of-the-art GAN-based model for image super resolution tasks. Real-ESRGAN improves opon its ancestor the [ESRGAN](https://github.com/xinntao/ESRGAN) in the means of inference time, making it a suitable option for real-time image super-resoltuion tasks. In this blog post, I will explain how you can deploy Real-ESRGAN in AWS and build a web application for your users to interact with it.   
+This blog post is a walkthrough in deploying [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) in Amazon Web Services (AWS). Real-ESRGAN is a state-of-the-art GAN-based model for image super resolution tasks. Real-ESRGAN improves opon its ancestor the [ESRGAN](https://github.com/xinntao/ESRGAN), making it a suitable option for real-time image super-resoltuion tasks. In this blog post, I will explain how you can deploy Real-ESRGAN in AWS and build a web application for your users to interact with it.   
 ### Utilized Techologies  
 This project utilizes the following technologies to deploy REal-ESRGAN on AWS: 
 - **Real-ESRGAN** : The GAN-based model by [@Xinntao](https://github.com/xinntao) which provides real-time inference capabilities for image super-resolution.  
 - **Amazon EC2 instance** : This is the main AWS service I am going to use. Amazon Elastic Compute Cloud (Amazon EC2) provides on-demand, scalable computing capacity in the Amazon Web Services (AWS) Cloud as explained in the [AWS docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html). 
 - **Docker** : I used [Docker](https://www.docker.com/) as a containarization framework to easily deploy and launch my application in AWS. 
-- **FastAPI** : [FastAPI](https://fastapi.tiangolo.com/) is used as a web-framework. FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints [docs](https://fastapi.tiangolo.com/). 
+- **FastAPI** : [FastAPI](https://fastapi.tiangolo.com/) is used as a web-framework. FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints ([docs](https://fastapi.tiangolo.com/)). 
 - **Uvicorn** : [Uvicorn](https://www.uvicorn.org/) is used as an ASGI web server. 
 - **Gradio** : Gradio is used to build user-interface to interact with the application. 
 
@@ -26,9 +26,6 @@ Below are some qualitative results of Real-ESRGAN
 
 
 ## Methodology
-### System Archeticture
-
-
 ### Adapt Real-ESRGAN code to accept http requests  
 The inference code of Real-ESRGAN needs to be adapted to accept http requests from the web application. To achieve this, I used FastAPI as a web framework and Uvicorn as an ASGI server. The main modifications are the following: 
 
@@ -52,7 +49,7 @@ def inference(item: data):
 	return result
 
 ```
-- To pass arguemnts to one of your endpoints, you can use pydantic to define a class that inf=herets from the BaseModel class. Any method you define for this class can be passed in the request body as json key-value pairs
+- To pass arguemnts to one of your endpoints, you can use pydantic to define a class that inherets from the BaseModel class. Any method you define for this class can be passed in the request body as json key-value pairs
 
 ```python
 from pydantic import BaseModel
@@ -133,7 +130,7 @@ You need to create a scirpt to interact with your server using http requests. Th
 The web UI of the application is created using Gradio. Gradio allows you to quickly build a demo or web application for your machine learning model. The script is available in gradio_demo.py 
 
 
-### Create a Dcoker container for easier deployment 
+### Create a Docker container for easier deployment 
 To easily deploy my application in AWS, I created a Docker container. The Dockerfile used to build the container will take care of installing all the needed dependencies. You can take a look at the Dockerfile for more details. To build the container, use the following command in the project directory. 
 ```bash
 docker build -t real_esrgan .  
@@ -141,15 +138,15 @@ docker build -t real_esrgan .
 You can optionally push the container to your repository in [Docker Hub](https://hub.docker.com/) to pull it later in AWS. 
 
 ### Run EC2 instance with GPU capabilities
-Now, we finally get to work on AWS infrastructure! We will launch an EC2 instance to host both the Real-ESRGAN ASGI server and the gradio demo app. Start by navigaring to the EC2 dashboard in your AWS account 
+Now, we finally get to work on AWS infrastructure! We will launch an EC2 instance to host both the Real-ESRGAN ASGI server and the gradio demo app. Start by navigating to the EC2 dashboard in your AWS account 
 <p align="center">
   <img src="assets/EC2_dashboard.png">
 </p>
 
 Then select **Launch Inastance** from the top right corner, this will open a page to configure settings for your instance. 
 
-#### AMazon Machine Image (AMI) and instance type
-Select an AMI that supports deep learning applications, to make our life easier as it will have all the required software to build deep learning applications. Moreover, you need to select an instanced type that supports accelerated computing using Nvidia GPUs. This way, we can leverage the parallel computing of GPUs wsint pytorch with cuda which will significantly afect the latency of our application. One example of n AMI and instance type is shown below. 
+#### Amazon Machine Image (AMI) and instance type
+Select an AMI that supports deep learning applications, to make our life easier as it will have all the required software to build deep learning applications. Moreover, you need to select an instanced type that supports accelerated computing using Nvidia GPUs. This way, we can leverage the parallel computing of GPUs using pytorch with cuda which will significantly affect the latency of our application. One example of an AMI and instance type is shown below. 
 <p align="center">
   <img src="assets/EC2_AMI.png">
 </p>
@@ -182,9 +179,14 @@ docker run -it --network host --entrypoint /bin/bash -v ./:/app repo-name/real-e
 Finally, we run the gradio demo app by using the command below, You can control sharing the demo publicly by using the share parameter (default is False)
 
 ```python
-python3 gradio_demo.py --share True
+python3 gradio_demo.py --share
 ```
+A link will be created which will show this page when accessed
+<p align="center">
+  <img src="assets/gradio_landing.png">
+</p>
 
-
-
-
+You can now upload an image and see it upscaled!
+<p align="center">
+  <img src="assets/gradio_example.png">
+</p>

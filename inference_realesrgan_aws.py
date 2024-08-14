@@ -30,7 +30,7 @@ def input_fn(img_str):
     return np_image
 
 
-def prepare_image(frame, encode_quality = 50): 
+def prepare_image(frame, encode_quality = 100): 
     frame = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
     _,buffer = cv2.imencode('.png', frame, [cv2.IMWRITE_JPEG_QUALITY, encode_quality])
     dashboard_img = base64.b64encode(buffer).decode()

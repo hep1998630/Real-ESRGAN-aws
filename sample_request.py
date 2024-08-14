@@ -4,25 +4,20 @@ import base64
 import cv2 
 from PIL import Image
 from io import BytesIO
-import argparse
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--input', type=str, default='additional_input/Hanekawa_wild.png', help='Input image or folder')
-parser.add_argument('--tile', type=int, default=0, help='Input image or folder')
 
 
 def input_fn(img_str):
-    """
-    Deserialize and prepare the prediction input
-    """
+  """
+  Deserialize and prepare the prediction input
+  """
 
-    data = base64.b64decode(img_str, validate= True)
+  data = base64.b64decode(img_str, validate= True)
 
-    im = Image.open(BytesIO(data))
-    # np_image = np.array(im)
-    # im.save('image1.png', 'PNG')
+  im = Image.open(BytesIO(data))
+  # np_image = np.array(im)
+  # im.save('image1.png', 'PNG')
 
-    return im
+  return im
 
 
 
