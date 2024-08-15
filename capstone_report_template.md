@@ -419,6 +419,8 @@ In this section, your model’s final solution and its results should be compare
 - _Is the final solution significant enough to have solved the problem?_
 
 
+The final product in our case is a web application hosted on AWS. The deployment process is throughly discussed and the codes are available publicly on GitHub. Hence, any interested developer should be able to replicate the whole process. Moreover, readers get to see an end-to-end solution that uses several technologies which can be used in other scenarios. 
+
 In this section, we compare the final Real-ESRGAN model's results to the benchmark established earlier in the project, conduct a thorough analysis of the solution, and determine the significance of the model in addressing the problem statement of enhancing image quality through super resolution on AWS infrastructure.
 Benchmark Comparison
 
